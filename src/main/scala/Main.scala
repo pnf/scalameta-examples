@@ -1,6 +1,20 @@
 import scala.meta._
 
 object Main extends App{
+  val tokenCode =
+    """
+      defte st Method = {
+        println("printing");
+    """.tokenize
+
+  val tokens = tokenCode match {
+    case Tokenized.Success(t) => t
+    case Tokenized.Error(_, _, details) => throw new Exception(details)
+  }
+
+  println(tokens.structure)
+  println(tokens.syntax)
+
   val code =
     """case class Car[CarCompany](brand: CarCompany, color: Color, name: String){
          val owner: String = "John"
@@ -18,9 +32,12 @@ object Main extends App{
     case template"{ ..$stats } with ..$ctorcalls { $param => ..$stats2 }" => stats2.map{
       case q"..$mods def $name[..$tparams](...$paramss): $tpe = $expr" => println(s"methodName: $name")
       case q"..$mods val ..$patsnel: $tpeopt = $expr" => println(s"value $patsnel equals to $expr")
-
     }
   }
+
+  val constructedTree = q"""def foo = println("quasiquotes")"""
+
+//  println(constructedTree.show[Structure])
 
   def parseCode[T](code: Parsed[T]): T = {
     code match {

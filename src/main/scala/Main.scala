@@ -37,7 +37,7 @@ object Main extends App{
 
   val constructedTree = q"""def foo = println("quasiquotes")"""
 
-//  println(constructedTree.show[Structure])
+  println(constructedTree.show[Structure])
 
   def parseCode[T](code: Parsed[T]): T = {
     code match {
@@ -45,4 +45,6 @@ object Main extends App{
       case Parsed.Error(pos, msg, details)  => throw new Exception(msg)
     }
   }
+
+//  ConstantsValidator.validate(new java.io.File("src/main/scala/Constants.scala").parse[Source].get)
 }

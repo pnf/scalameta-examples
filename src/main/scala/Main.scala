@@ -1,21 +1,31 @@
 import scala.meta._
 
 object Main extends App{
-  val code = """val a: List[String]= List()""".parse[Stat]
-  val caseExpr = """case true => println("its true!")""".parse[Case]
-  val term = """x + y""".parse[Term]
-  val arg = """a: List[String]""".parse[Term.Arg]
+  val code =
+    """case class Car[CarCompany](brand: CarCompany, color: Color, name: String){
+         val owner: String = "John"
+         def playRadio() = {
+           "playing radio"
+         }
+         val capacity, speed = (5, 200)
+         val oneVal = 45
+      }
+    """.parse[Stat]
 
-  printResult[Stat](code)
-  printResult[Case](caseExpr)
-  printResult[Term](term)
-  printResult[Term.Arg](arg)
+  val q"..$mods class $tname[..$tparams] ..$mods2 (...$paramss) extends $template" = parseCode(code)
 
-  def printResult[T](code: Parsed[T]): Unit = {
+  template match {
+    case template"{ ..$stats } with ..$ctorcalls { $param => ..$stats2 }" => stats2.map{
+      case q"..$mods def $name[..$tparams](...$paramss): $tpe = $expr" => println(s"methodName: $name")
+      case q"..$mods val ..$patsnel: $tpeopt = $expr" => println(s"value $patsnel equals to $expr")
+
+    }
+  }
+
+  def parseCode[T](code: Parsed[T]): T = {
     code match {
-      case Parsed.Success(tree) => println("Code is valid!")
-      case Parsed.Error(pos, msg, details)  =>
-        println(s"Pos: $pos, msg: $msg. More details: $details")
+      case Parsed.Success(tree) => tree
+      case Parsed.Error(pos, msg, details)  => throw new Exception(msg)
     }
   }
 }

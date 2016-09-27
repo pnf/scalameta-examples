@@ -1,3 +1,5 @@
+import java.io.FileWriter
+
 import scala.meta._
 
 object ConstantsValidator {
@@ -15,12 +17,38 @@ object ConstantsValidator {
               }
             }
             vals.groupBy(_.valValue).foreach{ case
-              (valueKey, listOfVals) => if (listOfVals.length > 1 ) throw new Exception(s"$valueKey is assigned twice to different vals: ${listOfVals.map(_.valName)}")
+              (valueKey, listOfVals) => if (listOfVals.length > 1 ) throw new Exception(s"$valueKey is assigned more than once to different vals: ${listOfVals.map(_.valName)}")
             }
           }
         }
         case _ =>
       }
+    })
+  }
+
+  def validateName(source: Source) ={
+    val fixedFile: Source = source match {
+      case source"..$stats" => source"..${buildNewStatements(stats)}"
+    }
+
+    val fw = new FileWriter("src/main/scala/Constants.scala")
+    fw.write(fixedFile.syntax)
+    fw.close
+
+  }
+
+  private def buildNewStatements(stats: scala.collection.immutable.Seq[Stat]): List[Stat] = {
+    stats.foldLeft(List[Stat]())((acc, elem) => elem match {
+      case q"..$mods object ${Term.Name(name)} extends $template" =>
+        val isFirstLetterOfObjectLowercase = Character.isLowerCase(name.head)
+        if(isFirstLetterOfObjectLowercase){
+          val newName = name.head.toString.toUpperCase + name.tail
+          val objectWithFixedName = q"..$mods object ${Term.Name(newName)} extends $template"
+          acc :+ objectWithFixedName
+        }else {
+          acc :+ q"..$mods object ${Term.Name(name)} extends $template"
+        }
+      case whatever => acc :+ whatever
     })
   }
 }

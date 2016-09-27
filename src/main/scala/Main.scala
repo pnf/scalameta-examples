@@ -1,4 +1,5 @@
 import scala.meta._
+import scala.meta.tokens.Token.Ident
 
 object Main extends App{
   val tokenCode =
@@ -12,8 +13,22 @@ object Main extends App{
     case Tokenized.Error(_, _, details) => throw new Exception(details)
   }
 
+  println(tokens.tokens)
   println(tokens.structure)
   println(tokens.syntax)
+
+  val tokenEx1 =
+    """
+      case class Scalameta {
+        def println() = sth.getOrElse(null)
+        val x = Option(foo()).getOrElse(12)
+        val y = {
+          Option(bar()).getOrElse("foo") + Future(x).get(null)
+        }
+      }
+    """.tokenize.get
+
+  println(TokenizeExamples(tokenEx1).replaceGetOrElseNull)
 
   val code =
     """case class Car[CarCompany](brand: CarCompany, color: Color, name: String){
@@ -47,4 +62,5 @@ object Main extends App{
   }
 
 //  ConstantsValidator.validate(new java.io.File("src/main/scala/Constants.scala").parse[Source].get)
+//  ConstantsValidator.validateName(new java.io.File("src/main/scala/Constants.scala").parse[Source].get)
 }

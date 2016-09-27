@@ -4,5 +4,4 @@ object Constants {
   val ruby1 = "ruby"
   val ruby2 = "ruby"
 }
-
 object SomeOtherObject

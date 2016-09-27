@@ -13,9 +13,9 @@ object Main extends App{
     case Tokenized.Error(_, _, details) => throw new Exception(details)
   }
 
-  println(tokens.tokens)
-  println(tokens.structure)
-  println(tokens.syntax)
+//  println(tokens.tokens)
+//  println(tokens.structure)
+//  println(tokens.syntax)
 
   val tokenEx1 =
     """
@@ -28,7 +28,7 @@ object Main extends App{
       }
     """.tokenize.get
 
-  println(TokenizeExamples(tokenEx1).replaceGetOrElseNull)
+//  println(TokenizeExamples(tokenEx1).replaceGetOrElseNull)
 
   val code =
     """case class Car[CarCompany](brand: CarCompany, color: Color, name: String){
@@ -43,16 +43,16 @@ object Main extends App{
 
   val q"..$mods class $tname[..$tparams] ..$mods2 (...$paramss) extends $template" = parseCode(code)
 
-  template match {
-    case template"{ ..$stats } with ..$ctorcalls { $param => ..$stats2 }" => stats2.map{
-      case q"..$mods def $name[..$tparams](...$paramss): $tpe = $expr" => println(s"methodName: $name")
-      case q"..$mods val ..$patsnel: $tpeopt = $expr" => println(s"value $patsnel equals to $expr")
-    }
-  }
+//  template match {
+//    case template"{ ..$stats } with ..$ctorcalls { $param => ..$stats2 }" => stats2.map{
+//      case q"..$mods def $name[..$tparams](...$paramss): $tpe = $expr" => println(s"methodName: $name")
+//      case q"..$mods val ..$patsnel: $tpeopt = $expr" => println(s"value $patsnel equals to $expr")
+//    }
+//  }
 
   val constructedTree = q"""def foo = println("quasiquotes")"""
 
-  println(constructedTree.show[Structure])
+//  println(constructedTree.show[Structure])
 
   def parseCode[T](code: Parsed[T]): T = {
     code match {

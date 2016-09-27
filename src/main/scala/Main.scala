@@ -63,4 +63,5 @@ object Main extends App{
 
 //  ConstantsValidator.validate(new java.io.File("src/main/scala/Constants.scala").parse[Source].get)
 //  ConstantsValidator.validateName(new java.io.File("src/main/scala/Constants.scala").parse[Source].get)
+//  println(CodeMetrics.counts)
 }

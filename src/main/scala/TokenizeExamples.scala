@@ -3,9 +3,9 @@ import scala.meta.tokens.Token.{Ident, KwNull, LeftParen}
 
 case class TokenizeExamples(tokens: Tokens) {
   type Index = Int
+  val leftParenFlag = "leftParen"
   val getOrElseFlag = "getOrElse"
   val nullFlag      = "null"
-  val leftParenFlag = "leftParen"
 
   def replaceGetOrElseNull = {
     val indexedTokens = tokens.zipWithIndex.toList
